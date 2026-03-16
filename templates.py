@@ -383,6 +383,7 @@ HTML_PAGE = '''<!DOCTYPE html>
     color: var(--text-dark);
     margin-bottom: 1rem;
     cursor: default;
+    white-space: pre-wrap;
   }
 
   .telugu-word {
@@ -404,6 +405,51 @@ HTML_PAGE = '''<!DOCTYPE html>
   .telugu-word.highlighted {
     background: var(--saffron-glow);
     border-bottom-color: var(--saffron);
+  }
+
+  /* Explanation Box */
+  .explanation-section {
+    margin-top: 20px;
+    background: var(--white);
+    border-radius: 16px;
+    border: 1.5px solid var(--cream-dark);
+    overflow: hidden;
+  }
+
+  .explanation-header {
+    background: var(--cream-dark);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--deep-teal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .explanation-content {
+    padding: 18px;
+  }
+
+  .exp-te {
+    font-family: 'Tiro Telugu', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .exp-en {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-mid);
+    font-style: italic;
+    display: block;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
   }
 
   /* Action row */
@@ -919,6 +965,22 @@ function renderParaCard(p, index) {
     </div>
   `).join('');
 
+  const explanationHtml = (p.explanation_te || p.explanation_en) ? `
+    <div class="explanation-section">
+      <div class="explanation-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        భావం · Meaning
+      </div>
+      <div class="explanation-content">
+        ${p.explanation_te ? `<span class="exp-te">${p.explanation_te}</span>` : ''}
+        ${p.explanation_en ? `<span class="exp-en">${p.explanation_en}</span>` : ''}
+      </div>
+    </div>
+  ` : '';
+
   return `
     <div class="para-card" id="para-${p.id}">
       <div class="para-number">${index + 1}</div>
@@ -948,9 +1010,11 @@ function renderParaCard(p, index) {
 
       <div class="hint-panel" id="hint-${p.id}">
         <div class="hint-label">🔤 Pronunciation Guide (Roman Script)</div>
-        <div class="transliteration-text">${p.transliteration}</div>
-        <div class="translation-text">📖 Meaning: ${p.translation}</div>
+        <div class="transliteration-text" style="white-space: pre-wrap;">${p.transliteration}</div>
+        <div class="translation-text">📖 Translation: ${p.translation}</div>
       </div>
+
+      ${explanationHtml}
 
       <div class="words-section">
         <div class="words-toggle" onclick="toggleWords('${p.id}')">
