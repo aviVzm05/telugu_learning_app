@@ -125,6 +125,54 @@ HTML_PAGE = '''<!DOCTYPE html>
     top: 88px;
   }
 
+  /* Module Selector */
+  .module-selector {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 10px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .module-btn {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: var(--cream);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .module-btn:hover {
+    background: var(--cream-dark);
+  }
+
+  .module-btn.active {
+    border-color: var(--saffron);
+    background: var(--saffron-glow);
+  }
+
+  .module-btn .m-te {
+    font-family: 'Tiro Telugu', serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--deep-teal);
+  }
+
+  .module-btn .m-en {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
   .sidebar-title {
     font-size: 12px;
     font-weight: 800;
@@ -706,6 +754,9 @@ HTML_PAGE = '''<!DOCTYPE html>
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
+    <div class="sidebar-title">📑 మాడ్యూల్ · Module</div>
+    <div id="moduleSelector" class="module-selector"></div>
+
     <div class="sidebar-title">📚 పాఠాలు · Lessons</div>
     <div id="lessonsList" class="lessons-row"></div>
   </aside>
@@ -725,34 +776,67 @@ HTML_PAGE = '''<!DOCTYPE html>
 
 <script>
 // ─── STATE ───────────────────────────────────────────
+let currentModuleId = null;
 let currentLesson = null;
 let completedParas = new Set();
-let speechQueue = [];
 let isSpeaking = false;
 const tooltip = document.getElementById('wordTooltip');
 
 // ─── INIT ────────────────────────────────────────────
 async function init() {
-  console.log('Fetching lessons...');
-  const res = await fetch('/api/lessons');
+  console.log('Fetching modules...');
+  const res = await fetch('/api/modules');
+  const modules = await res.json();
+  renderModules(modules);
+  
+  if (modules.length > 0) {
+    loadModule(modules[0].id);
+  }
+}
+
+// ─── MODULES ─────────────────────────────────────────
+function renderModules(modules) {
+  const container = document.getElementById('moduleSelector');
+  container.innerHTML = modules.map(m => `
+    <div class="module-btn" onclick="loadModule('${m.id}')" id="mbtn-${m.id}">
+      <span class="m-te">${m.title_te}</span>
+      <span class="m-en">${m.title}</span>
+    </div>
+  `).join('');
+}
+
+async function loadModule(moduleId) {
+  currentModuleId = moduleId;
+  document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mbtn-' + moduleId)?.classList.add('active');
+  
+  // Clear lesson view
+  document.getElementById('lessonView').innerHTML = `
+    <div class="empty-state">
+      <div class="big-emoji">📖</div>
+      <p>పాఠాన్ని ఎంచుకోండి<br>
+      <span style="font-size:13px; color:#aaa;">Choose a lesson to begin</span></p>
+    </div>
+  `;
+
+  console.log('Fetching lessons for module:', moduleId);
+  const res = await fetch('/api/lessons/' + moduleId);
   const lessons = await res.json();
-  console.log('Lessons fetched:', lessons);
   renderSidebar(lessons);
 }
 
 // ─── SIDEBAR ─────────────────────────────────────────
 function renderSidebar(lessons) {
-  console.log('Rendering sidebar...');
   const list = document.getElementById('lessonsList');
-  const icons = ['మ', 'భ', 'ప్ర', 'శ'];
+  // Dynamic icons based on first letter of title
   list.innerHTML = lessons.map((l, i) => `
     <div class="lesson-card" onclick="loadLesson(${l.id})" id="lcard-${l.id}">
-      <div class="lesson-icon">${icons[i] || 'త'}</div>
+      <div class="lesson-icon">${l.title.charAt(0)}</div>
       <div class="lesson-meta">
         <div class="title-te">${l.title}</div>
         <div class="title-en">${l.title_meaning}</div>
       </div>
-      <div class="level-pill ${l.level_en === 'Easy' ? 'easy' : 'medium'}">${l.level}</div>
+      <div class="level-pill ${l.level_en === 'Easy' ? 'easy' : (l.level_en === 'Medium' ? 'medium' : 'hard')}">${l.level}</div>
     </div>
   `).join('');
 }
@@ -762,7 +846,7 @@ async function loadLesson(id) {
   document.querySelectorAll('.lesson-card').forEach(c => c.classList.remove('active'));
   document.getElementById('lcard-' + id)?.classList.add('active');
 
-  const res = await fetch('/api/lesson/' + id);
+  const res = await fetch(`/api/lesson/${currentModuleId}/${id}`);
   currentLesson = await res.json();
   completedParas.clear();
   renderLesson();
