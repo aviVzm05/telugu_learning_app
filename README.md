@@ -1,69 +1,77 @@
 # తెలుగు నేర్చుకుందాం — Telugu Learning App
-### For Class 8 Students · 8వ తరగతి విద్యార్థులకు
+### Interactive Telugu Learning for Students · 8వ తరగతి విద్యార్థులకు
 
 ---
 
-## Features
-- 📖 **4 Telugu lessons** with real passages from school-level texts
-- 🔊 **Text-to-Speech** — reads any paragraph or word aloud in Telugu
-- 📝 **Word meanings** — hover over any Telugu word to see its meaning
-- 🔤 **Pronunciation guide** — Roman transliteration for every paragraph
-- ✅ **Progress tracking** — mark paragraphs as completed
-- 🎨 **Beautiful UI** — designed for engagement
+## 🌟 Features
+- 📚 **Multiple Modules** — Choose between **Short Paragraphs** and **Vemana Satakam** (Poetry).
+- 📖 **20 Interactive Lessons** — Carefully selected content for progressive learning.
+- 🔊 **Text-to-Speech** — High-quality Telugu audio for paragraphs, poems, and individual words.
+- 📝 **Smart Word Meanings** — Hover over any Telugu word to see its meaning and transliteration.
+- 🔤 **Pronunciation Guide** — Roman transliteration available for every lesson.
+- 💡 **Bilingual Explanations** — Deep-dive meanings (Bhavam) for poems in both Telugu and English.
+- ✅ **Progress Tracking** — Visual progress bars and "Mark as Done" functionality.
+- 🎨 **Modern Aesthetic UI** — Clean, responsive design optimized for desktop learning.
 
 ---
 
-## How to Run
+## 🚀 How to Run
 
-### Step 1: Install Flask
+### Step 1: Install Dependencies
+Ensure you have Python installed, then install Flask:
 ```bash
 pip install flask
 ```
 
-### Step 2: Start the app
+### Step 2: Start the Application
+Run the main Flask application from the project root:
 ```bash
-cd telugu_app
 python app.py
 ```
 
-### Step 3: Open in browser
+### Step 3: Access the App
+Open your web browser and navigate to:
 ```
 http://localhost:5050
 ```
 
 ---
 
-## How to Use
-
-1. **Choose a lesson** from the left sidebar
-2. **Read the Telugu text** — hover over highlighted words to see their meanings
-3. **Click "వినండి (Listen)"** to hear the paragraph read aloud in Telugu
-4. **Click any word chip** in the word list to hear just that word
-5. **Click "Pronunciation Help"** to see how to pronounce the text in Roman script
-6. **Click "చదివాను (Done)"** when you've finished a paragraph
-
----
-
-## Browser Notes
-- Works best in **Google Chrome** or **Microsoft Edge**
-- Telugu TTS requires `te-IN` voice — available on Chrome on Android/Windows
-- On systems without Telugu voice, it falls back to English pronunciation of the Roman script
+## 🛠️ Project Structure
+The project has been refactored for better maintainability:
+- `app.py`: Main Flask server and API endpoints.
+- `lessons.py`: Central manager for all lesson modules.
+- `templates.py`: Contains the interactive HTML/CSS/JS frontend.
+- `telugu_lessons/`: Directory containing lesson data.
+  - `short_paras.py`: 10 lessons featuring descriptive paragraphs.
+  - `vemana_poems.py`: 10 classic Vemana Satakam poems with detailed explanations.
 
 ---
 
-## Lessons Included
-| # | Title | Meaning | Level |
-|---|-------|---------|-------|
-| 1 | మన పాఠశాల | Our School | Easy |
-| 2 | భారతదేశం | India | Medium |
-| 3 | ప్రకృతి అందాలు | Beauty of Nature | Medium |
-| 4 | మన శరీరం | Our Body | Easy |
+## 📖 Modules Included
+
+### 1. చిన్న పేరాలు · Short Paragraphs
+Focuses on reading comprehension with topics like:
+- **Our School** (మన పాఠశాల)
+- **India** (భారతదేశం)
+- **Nature's Beauty** (ప్రకృతి అందాలు)
+- ...and more (10 lessons total).
+
+### 2. వేమన శతకం · Vemana Satakam
+Classic ethical poetry (Aataveladi) by Yogi Vemana, featuring:
+- **Salt and Camphor** (ఉప్పు కప్పురంబు)
+- **Quality over Quantity** (గంగిగోవు పాలు)
+- **Practice Makes Perfect** (అనగననగ రాగ మతిశయిల్లుచునుండు)
+- Detailed **Telugu & English explanations** for every poem.
 
 ---
 
-## Adding More Lessons
-Edit `app.py` and add entries to the `LESSONS` list following the existing format. Each paragraph needs:
-- `telugu` — the Telugu text (max 2 lines)
-- `transliteration` — Roman script pronunciation guide
-- `translation` — English meaning
-- `words` — list of key words with meanings
+## 🎙️ Browser & Audio Notes
+- **Best Experience:** Use **Google Chrome** or **Microsoft Edge**.
+- **Voice Support:** The app uses the system's native TTS. For the best experience, ensure a Telugu (`te-IN`) voice is installed on your OS.
+- **Fallback:** If a Telugu voice is unavailable, the app will gracefully handle audio using available system voices.
+
+---
+
+## 🤝 Contributing
+To add new content, create a new module in the `telugu_lessons/` directory and register it in `lessons.py`.
