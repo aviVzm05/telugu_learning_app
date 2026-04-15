@@ -1,0 +1,23 @@
+[flake8]
+# Ignore specific error codes
+ignore = E501, W503, W504
+
+# Exclude directories that don't need linting
+exclude = 
+    .git,
+    .venv,
+    __pycache__,
+    .pytest_cache,
+    .env,
+    node_modules,
+    telugu_lessons,
+    progress_data
+
+# Maximum line length
+max-line-length = 100
+
+# Show statistics
+statistics = True
+
+# Show source code
+show-source = True

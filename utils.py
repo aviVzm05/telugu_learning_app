@@ -3,10 +3,8 @@ Utility functions for Telugu Learning App
 Handles progress tracking, file operations, and data validation
 """
 import json
-import os
 from datetime import datetime
 from pathlib import Path
-
 
 PROGRESS_DIR = Path("progress_data")
 PROGRESS_DIR.mkdir(exist_ok=True)
@@ -20,14 +18,14 @@ def get_progress_file(module_id, lesson_id):
 def mark_lesson_complete(module_id, lesson_id):
     """Mark a lesson as completed"""
     progress_file = get_progress_file(module_id, lesson_id)
-    
+
     data = {
         "completed": True,
         "completed_at": datetime.now().isoformat(),
         "module_id": module_id,
         "lesson_id": lesson_id
     }
-    
+
     try:
         with open(progress_file, 'w') as f:
             json.dump(data, f, indent=2)
@@ -40,26 +38,26 @@ def mark_lesson_complete(module_id, lesson_id):
 def get_lesson_progress(module_id, lesson_id):
     """Get the progress status of a lesson"""
     progress_file = get_progress_file(module_id, lesson_id)
-    
+
     if progress_file.exists():
         try:
-            with open(progress_file, 'r') as f:
+            with open(progress_file) as f:
                 return json.load(f)
         except Exception as e:
             print(f"Error reading progress: {e}")
-    
+
     return {"completed": False}
 
 
 def get_module_progress(module_id, total_lessons):
     """Calculate progress for a module"""
     completed = 0
-    
+
     for lesson_id in range(1, total_lessons + 1):
         progress = get_lesson_progress(module_id, lesson_id)
         if progress.get("completed", False):
             completed += 1
-    
+
     return {
         "total": total_lessons,
         "completed": completed,

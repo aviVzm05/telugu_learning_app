@@ -834,7 +834,7 @@ async function init() {
   const res = await fetch('/api/modules');
   const modules = await res.json();
   renderModules(modules);
-  
+
   if (modules.length > 0) {
     loadModule(modules[0].id);
   }
@@ -855,7 +855,7 @@ async function loadModule(moduleId) {
   currentModuleId = moduleId;
   document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('mbtn-' + moduleId)?.classList.add('active');
-  
+
   // Clear lesson view
   document.getElementById('lessonView').innerHTML = `
     <div class="empty-state">
@@ -945,8 +945,8 @@ function renderParaCard(p, index) {
   let htmlText = tokens.map(tok => {
     if (tok.type === 'word' && wordMap[tok.text]) {
       const w = wordMap[tok.text];
-      return `<span class="telugu-word" 
-        data-word="${escHtml(w.word)}" 
+      return `<span class="telugu-word"
+        data-word="${escHtml(w.word)}"
         data-meaning="${escHtml(w.meaning)}"
         data-roman="${escHtml(w.transliteration)}"
         onmouseenter="showTooltip(event, this)"
