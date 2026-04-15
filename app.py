@@ -201,4 +201,4 @@ if __name__ == '__main__':
     port = app.config.get('PORT', 5050)
     debug = app.config.get('DEBUG', False)
     app.logger.info(f"Starting Flask app on port {port} (debug={debug})")
-    app.run(debug=debug, port=port)
+    app.run(debug=debug, port=port,host='0.0.0.0')
